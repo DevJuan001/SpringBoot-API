@@ -53,17 +53,15 @@ class ProductsRepository {
     fun updateProducts(products: Products, id: Int): Int {
         val sql = """
             UPDATE PRODUCTS SET
-               subcategory_id =?,
-             product_id =?,
+             subcategory_id =?,
              product_stock =?,
-             product_details_id =?,
+             product_details_id =?
             WHERE product_id = ?
         """.trimIndent()
 
         return jdbcTemplate.update(
             sql,
             products.subcategory_id,
-            products.product_id ,
             products.product_stock,
             products.product_details_id,
             id

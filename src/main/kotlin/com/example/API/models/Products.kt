@@ -13,16 +13,4 @@ data class Products (
     var product_details_id: Int,
     var product_garanty_input: String? = null
 ) {
-}/*
-
-
-
-
-
-      "subcategory_id": ,
-      "products_id": ,
-      "products_stock": ,
-      "products_details_id": " "
-
-
-     */
+}
