@@ -3,7 +3,6 @@ package com.example.API.controllers
 import com.example.API.middlewares.JwtFilter
 import com.example.API.models.User
 import com.example.API.repositories.UsersRepository
-import com.example.API.service.Security
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -16,22 +15,24 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class UsersController(private val jwtFilter: JwtFilter) {
+class UsersController() {
     @Autowired
     lateinit var userRepository: UsersRepository
 
-    @GetMapping("/users")
+    @Autowired
+    lateinit var jwtFilter: JwtFilter
+
+    @GetMapping("/users/")
     fun getUsers(@RequestHeader("Authorization", required = false) token: String): ResponseEntity<Any> {
 
         val error = jwtFilter.requireRole(token, "Admin")
         if (error != null) {
             return error
         }
-
         return ResponseEntity.ok(userRepository.getUsers())
     }
 
-    @PostMapping("/users")
+    @PostMapping("/users/create")
     fun createUser(@RequestBody user: User): Map<String, Any>{
 
         val createdUser = userRepository.createUser(user)
@@ -49,7 +50,7 @@ class UsersController(private val jwtFilter: JwtFilter) {
         }
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/users/update/{id}")
     fun updateUser(@RequestBody user: User, @PathVariable id: Int): Map<String, Any>{
         val updatedUser = userRepository.updateUser(user, id)
 
@@ -66,7 +67,7 @@ class UsersController(private val jwtFilter: JwtFilter) {
         }
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/users/delete/{id}")
     fun deleteUser(@PathVariable id: Int): Map<String, Any>{
         val deleteUser = userRepository.deleteUser(id)
 
