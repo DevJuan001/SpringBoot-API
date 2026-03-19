@@ -5,6 +5,7 @@ import com.example.API.models.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.security.crypto.bcrypt.BCrypt
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -13,9 +14,19 @@ class UsersRepository {
     lateinit var jdbcTemplate: JdbcTemplate
 
     fun getUsers(): List<User> {
-        return jdbcTemplate.query("SELECT * FROM USERS", RowMapper<User> {rs, _ ->
+        return jdbcTemplate.query("""
+            SELECT
+                r.rol_id,
+                r.rol_name,
+                u.*
+            FROM ROLES as r
+            INNER JOIN USERS AS u
+            ON r.rol_id = u.rol_id
+            ORDER BY u.user_id DESC
+            """.trimIndent(), RowMapper<User> {rs, _ ->
             User(
                 rs.getInt("rol_id"),
+                rs.getString("rol_name"),
                 rs.getInt("user_id"),
                 rs.getString("user_name"),
                 rs.getString("user_first_surname"),
@@ -72,6 +83,8 @@ class UsersRepository {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """.trimIndent()
 
+        val password_hash = BCrypt.hashpw(user.user_password, BCrypt.gensalt(12))
+
         return jdbcTemplate.update(
             sql,
             user.rol_id,
@@ -80,7 +93,7 @@ class UsersRepository {
             user.user_second_surname,
             user.user_phone,
             user.user_email,
-            user.user_password,
+            password_hash,
             user.user_address,
             user.user_city
         )
