@@ -2,6 +2,7 @@ package com.example.API.models
 
 data class User (
     var rol_id: Int? = null,
+    var rol_name: String? = null,
     var user_id: Int? = null,
     var user_name: String,
     var user_first_surname: String,
