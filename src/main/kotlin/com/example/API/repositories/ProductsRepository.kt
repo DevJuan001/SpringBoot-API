@@ -1,93 +1,81 @@
 package com.example.API.repositories
 
-import com.example.API.models.Product
+import com.example.API.models.Products
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
 
+
 @Repository
 class ProductsRepository {
-
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
-    fun getProducts(): List<Product> {
-        return jdbcTemplate.query("SELECT * FROM PODUCTS", RowMapper<Product> { rs, _ ->
-            Product(
+    fun getProducts(): List<Products> {
+        return jdbcTemplate.query("SELECT * FROM get_all_products", RowMapper<Products> { rs, _ ->
+            Products(
                 rs.getInt("input_order_id"),
+                rs.getString("input_order_bill"),
+                rs.getString("category_name"),
                 rs.getInt("subcategory_id"),
-                rs.getInt("product_id "),
-                rs.getInt("product_serial"),
-                rs.getString("product_name"),
-                rs.getString("product_model"),
+                rs.getString("subcategory_name"),
+                rs.getInt("product_id"),
+                rs.getString("product_serial"),
+                rs.getString("product_detail_model"),
                 rs.getInt("product_stock"),
-                rs.getString("product_garanty_input"),
+                rs.getInt("product_details_id"),
+                rs.getString("product_garanty_input")
             )
         })
     }
 
-
-    fun createProduct(product: Product): Int {
+    fun createProducts(products: Products): Int {
         val sql = """
             INSERT INTO PRODUCTS(
-            input_order_id,
-            subcategory_id,
-            product_id ,
-            product_serial,
-            product_name,
-            product_model,
-            product_stock,
-            product_garanty_input,
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+             subcategory_id,
+             product_details_id,
+             product_stock
+             )
+            VALUES ( ?, ?, ?)
         """.trimIndent()
+
+
 
         return jdbcTemplate.update(
             sql,
-            product.input_order_id,
-            product.subcategory_id,
-            product.product_id,
-            product.product_serial,
-            product.product_name,
-            product.product_model,
-            product.product_stock,
-            product.product_garanty_input
+            products.subcategory_id,
+            products.product_stock,
+            products.product_details_id,
         )
     }
 
-    fun updateProduct(product: Product, id: Int): Int {
+    fun updateProducts(products: Products, id: Int): Int {
         val sql = """
             UPDATE PRODUCTS SET
-            subcategory_id = ?,
-            product_id = ?,
-            product_serial = ?,
-            product_name = ?,
-            product_model = ?,
-            product_stock = ?,
-            product_garanty_input = ?,
-            WHERE product_id = ?    
+             subcategory_id =?,
+             product_stock =?,
+             product_details_id =?
+            WHERE product_id = ?
         """.trimIndent()
 
         return jdbcTemplate.update(
             sql,
-            product.input_order_id,
-            product.subcategory_id,
-            product.product_id,
-            product.product_serial,
-            product.product_name,
-            product.product_model,
-            product.product_stock,
-            product.product_garanty_input,
+            products.subcategory_id,
+            products.product_stock,
+            products.product_details_id,
             id
         )
     }
 
-    fun deleteProduct(id: Int): Int {
+    fun deleteProducts(id: Int): Int {
         val sql = """
-            DELETE FROM PRODUCT
+            DELETE FROM PRODUCTS
             WHERE product_id = ?
         """.trimIndent()
 
         return jdbcTemplate.update(sql, id)
     }
+
+
 }
