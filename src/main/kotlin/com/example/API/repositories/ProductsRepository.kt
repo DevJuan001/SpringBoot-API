@@ -23,7 +23,6 @@ class ProductsRepository {
                 rs.getInt("product_id"),
                 rs.getString("product_serial"),
                 rs.getString("product_detail_model"),
-                rs.getInt("product_stock"),
                 rs.getInt("product_details_id"),
                 rs.getString("product_garanty_input")
             )
@@ -45,7 +44,6 @@ class ProductsRepository {
         return jdbcTemplate.update(
             sql,
             products.subcategory_id,
-            products.product_stock,
             products.product_details_id,
         )
     }
@@ -62,7 +60,6 @@ class ProductsRepository {
         return jdbcTemplate.update(
             sql,
             products.subcategory_id,
-            products.product_stock,
             products.product_details_id,
             id
         )
