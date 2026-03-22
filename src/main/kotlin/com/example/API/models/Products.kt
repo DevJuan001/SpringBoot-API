@@ -9,7 +9,6 @@ data class Products (
     var product_id : Int? = null,
     var product_serial: String? = null,
     var product_model: String? = null,
-    var product_stock: Int,
     var product_details_id: Int,
     var product_garanty_input: String? = null
 ) {
