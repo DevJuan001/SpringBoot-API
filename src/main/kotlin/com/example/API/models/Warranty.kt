@@ -9,7 +9,7 @@ data class Warranty(
     var warranty_description: String,
     var warranty_link_attachments: String,
     var warranty_city: String,
-    var warranty_date: String,
+    var warranty_date: String?=null,
     var warranty_status: Int? = null
 
 ) {

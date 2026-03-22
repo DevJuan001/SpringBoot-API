@@ -11,7 +11,7 @@ class WarrantiesRepository {
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
     fun getWarranties(): List <Warranty>{
-        return jdbcTemplate.query("SELECT * FROM WARRANTY_INCIDENTS", RowMapper<Warranty> {rs,_->
+        return jdbcTemplate.query("SELECT * FROM WARRANTY_INCIDENTS ORDER BY warranty_incidents_id DESC", RowMapper<Warranty> {rs,_->
             Warranty(
                 rs.getInt("warranty_incidents_id"),
                 rs.getString("product_serial"),
