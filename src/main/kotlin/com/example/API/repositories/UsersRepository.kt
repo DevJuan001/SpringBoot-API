@@ -101,17 +101,19 @@ class UsersRepository {
 
     fun updateUser(user: User, id: Int): Int {
         val sql = """
-            UPDATE USERS SET
-                user_name = ?,
-                user_first_surname = ?,
-                user_second_surname = ?,
-                user_phone = ?,
-                user_email = ?,
-                user_password = ?,
-                user_address = ?,
-                user_city = ?
-            WHERE user_id = ?
-        """.trimIndent()
+        UPDATE USERS SET
+            user_name = ?,
+            user_first_surname = ?,
+            user_second_surname = ?,
+            user_phone = ?,
+            user_email = ?,
+            user_password = ?,
+            user_address = ?,
+            user_city = ?
+        WHERE user_id = ?
+    """.trimIndent()
+
+        val password_hash = BCrypt.hashpw(user.user_password, BCrypt.gensalt(12)) // ← agrega esto
 
         return jdbcTemplate.update(
             sql,
@@ -120,13 +122,12 @@ class UsersRepository {
             user.user_second_surname,
             user.user_phone,
             user.user_email,
-            user.user_password,
+            password_hash, 
             user.user_address,
             user.user_city,
             id
         )
     }
-
     fun deleteUser(id: Int): Int {
         val sql = """
             DELETE FROM USERS
